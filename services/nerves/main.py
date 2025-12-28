@@ -5,6 +5,8 @@ import logging
 import os
 import psutil
 import subprocess
+import signal
+from threading import Event
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,6 +20,12 @@ logger = logging.getLogger("Helixa-Nerves")
 
 BRAIN_API_URL = os.getenv("BRAIN_API_URL", "http://localhost:8000/telemetry")
 HARDWARE_MODE = os.getenv("HARDWARE_MODE", "false").lower() == "true"
+shutdown_event = Event()
+
+
+def handle_shutdown(signum, frame):
+    logger.info(f"Received signal {signum}. Shutting down telemetry stream gracefully.")
+    shutdown_event.set()
 
 def get_hardware_metrics():
     """Captures real hardware metrics from the host machine."""
@@ -126,7 +134,7 @@ def stream_data():
     """Streams telemetry to the Brain service."""
     logger.info(f"Starting telemetry stream to {BRAIN_API_URL}")
     
-    while True:
+    while not shutdown_event.is_set():
         data = generate_telemetry()
         try:
             # In a real scenario, we would use a message broker like Kafka.
@@ -139,7 +147,13 @@ def stream_data():
         except Exception as e:
             logger.error(f"Connection error: {str(e)}")
         
-        time.sleep(5)  # Send data every 5 seconds
+        shutdown_event.wait(5)  # Send data every 5 seconds or exit on shutdown
 
 if __name__ == "__main__":
-    stream_data()
+    signal.signal(signal.SIGTERM, handle_shutdown)
+    signal.signal(signal.SIGINT, handle_shutdown)
+
+    try:
+        stream_data()
+    finally:
+        logger.info("Telemetry stream halted.")

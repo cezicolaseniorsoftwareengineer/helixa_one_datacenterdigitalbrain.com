@@ -28,10 +28,6 @@ async def root():
 @app.get("/health")
 async def health():
     return {
-        "status": "healthy",
-        "components": {
-            "ia_engine": "active",
-            "safety_controller": "operational",
-            "telemetry_bridge": "connected"
-        }
+        "status": "ok",
+        "timestamp": time.time()
     }
