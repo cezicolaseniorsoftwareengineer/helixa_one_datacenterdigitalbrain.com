@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+.env
+.env.*
+pytest_cache/
+
+# Node.js / Next.js
+node_modules/
+.next/
+out/
+
+# Build artifacts
+*.log
+*.sqlite
+*.db
+
+# IDEs and tooling
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project-specific exclusions
+.github/
+StartSoftware.txt
+copilot-instructions.md
