@@ -47,6 +47,16 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 - **Observability**: OpenTelemetry, Prometheus exporters, structured logging
 - **Containerization**: Docker, docker-compose
 
+## Interface Highlights
+
+| Mode                              | Preview                                                             |
+| --------------------------------- | ------------------------------------------------------------------- |
+| **Data Center Spatial Awareness** | ![Helixa-One Datacenter Overview](Projeto%20data%20center%201.webp) |
+| **Rack-Level Thermal Insight**    | ![Helixa-One Rack View](Projeto%20data%20center%202.gif)            |
+| **Notebook Digital Twin**         | ![Helixa-One Notebook Mode](Projeto%20data%20center%203.jpg)        |
+| **Control-Center Navigation**     | ![Helixa-One Control Center](Projeto%20data%20center%204.gif)       |
+| **AI Confidence Dashboard**       | ![Helixa-One AI Confidence Panel](Projeto%20data%20center%205.png)  |
+
 ## Development Workflow
 
 ### Prerequisites
