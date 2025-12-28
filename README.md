@@ -12,6 +12,23 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 | **Control-Center Navigation**     | ![Helixa-One Control Center](Projeto%20data%20center%204.gif)       |
 | **AI Confidence Dashboard**       | ![Helixa-One AI Confidence Panel](Projeto%20data%20center%205.png)  |
 
+### Snapshot Details
+
+- **Data Center Spatial Awareness** — apresenta três racks monitorados, com o orbe de controle posicional supervisionando deslocamentos e eficiência.
+- **Rack-Level Thermal Insight** — evidencia o painel térmico ao vivo, exibindo média de 24,5 °C e indicadores de eficiência energética.
+- **Notebook Digital Twin** — demonstra a versão edge do digital twin, confirmando suporte a dispositivos móveis e layout adaptável.
+- **Control-Center Navigation** — mostra o painel lateral retrátil com seleção de ambientes, acesso a Settings/Analytics e estado criptografado v2.4.0-Stable.
+- **AI Confidence Dashboard** — ressalta o log do Safety Controller, telemetria em streaming e confiança operacional de 98,4%.
+
+#### Additional Production Views
+
+| Scene                       | Preview                                                 |
+| --------------------------- | ------------------------------------------------------- |
+| **Datacenter Control Loop** | ![Helixa-One Control Loop](ProjetoHelixaProd1.png)      |
+| **PC Mode Twin**            | ![Helixa-One PC Twin](ProjetoHelixaProd2.png)           |
+| **Notebook Twin**           | ![Helixa-One Notebook Twin](ProjetoHelixaProd3.png)     |
+| **Navigation Drawer**       | ![Helixa-One Navigation Drawer](ProjetoHelixaProd4.png) |
+
 ## Core Capabilities
 
 - Digital twin orchestration with 3D visualization and real-time state synchronization
