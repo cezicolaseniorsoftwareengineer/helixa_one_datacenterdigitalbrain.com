@@ -7,7 +7,7 @@ logger = logging.getLogger("Helixa-Janitor")
 
 def run_janitor():
     """
-    Remove dados de telemetria com mais de 24 horas para manter o banco leve.
+    Removes telemetry data older than 24 hours to keep the database lean.
     """
     try:
         client = SupabaseManager.get_client()
@@ -19,15 +19,15 @@ def run_janitor():
     
     while True:
         try:
-            # Calcula o timestamp de 24 horas atrás
-            # Nota: Supabase usa ISO strings, mas podemos usar filtros de data
-            # Para simplificar, vamos remover registros onde 'created_at' é antigo
-            # O Supabase permite filtros como .lt('created_at', timestamp)
+            # Calculate timestamp from 24 hours ago
+            # Note: Supabase uses ISO strings, but we can use date filters
+            # To simplify, we will remove records where 'created_at' is old
+            # Supabase allows filters like .lt('created_at', timestamp)
             
-            # Como o volume é baixo para o MVP, vamos apenas logar por enquanto
-            # e implementar a deleção real se o cliente tiver muitas linhas.
+            # Since volume is low for the MVP, we will just log for now
+            # and implement real deletion if the client has many rows.
             
-            # Exemplo de deleção (comentado para segurança inicial):
+            # Deletion example (commented for initial safety):
             # result = client.table("telemetry").delete().lt("created_at", "now() - interval '24 hours'").execute()
             
             logger.info("Janitor cycle complete. System is lean.")
@@ -35,7 +35,7 @@ def run_janitor():
         except Exception as e:
             logger.error(f"Janitor error: {str(e)}")
             
-        time.sleep(3600) # Roda a cada 1 hora
+        time.sleep(3600) # Runs every 1 hour
 
 if __name__ == "__main__":
     run_janitor()

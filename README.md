@@ -10,15 +10,15 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 | **Rack-Level Thermal Insight**    | ![Helixa-One Rack View](Projeto%20data%20center%202.gif)            |
 | **Notebook Digital Twin**         | ![Helixa-One Notebook Mode](Projeto%20data%20center%203.jpg)        |
 | **Control-Center Navigation**     | ![Helixa-One Control Center](Projeto%20data%20center%204.gif)       |
-| **AI Confidence Dashboard**       | ![Helixa-One AI Confidence Panel](Projeto%20data%20center%205.png)  |
+| **Confidence Dashboard**          | ![Helixa-One Confidence Panel](Projeto%20data%20center%205.png)     |
 
 ### Snapshot Details
 
-- **Data Center Spatial Awareness** — apresenta três racks monitorados, com o orbe de controle posicional supervisionando deslocamentos e eficiência.
-- **Rack-Level Thermal Insight** — evidencia o painel térmico ao vivo, exibindo média de 24,5 °C e indicadores de eficiência energética.
-- **Notebook Digital Twin** — demonstra a versão edge do digital twin, confirmando suporte a dispositivos móveis e layout adaptável.
-- **Control-Center Navigation** — mostra o painel lateral retrátil com seleção de ambientes, acesso a Settings/Analytics e estado criptografado v2.4.0-Stable.
-- **AI Confidence Dashboard** — ressalta o log do Safety Controller, telemetria em streaming e confiança operacional de 98,4%.
+- **Data Center Spatial Awareness** — features three monitored racks, with the positional control orb supervising movement and efficiency.
+- **Rack-Level Thermal Insight** — highlights the live thermal panel, displaying an average of 24.5°C and energy efficiency indicators.
+- **Notebook Digital Twin** — demonstrates the edge version of the digital twin, confirming mobile device support and adaptive layout.
+- **Control-Center Navigation** — shows the retractable side panel with environment selection, access to Settings/Analytics, and encrypted state v2.4.0-Stable.
+- **Confidence Dashboard** — emphasizes the Safety Controller log, streaming telemetry, and operational confidence of 98.4%.
 
 #### Additional Production Views
 

@@ -4,7 +4,7 @@ logger = logging.getLogger("Helixa-Safety")
 
 class SafetyController:
     """
-    The Safety Controller is the final gatekeeper for all AI decisions.
+    The Safety Controller is the final gatekeeper for all system decisions.
     It ensures that no action or metric violates physical safety boundaries.
     """
     
@@ -39,6 +39,6 @@ class SafetyController:
 
     @classmethod
     def validate_action(cls, action_type: str, params: dict) -> bool:
-        """Validates if an AI-proposed action is safe to execute."""
+        """Validates if a system-proposed action is safe to execute."""
         # Placeholder for future action validation logic
         return True

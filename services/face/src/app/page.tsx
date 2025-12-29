@@ -327,7 +327,7 @@ export default function Dashboard() {
 
               <div className="mt-6 pt-5 border-t border-white/5 shrink-0">
                 <div className="flex justify-between items-end mb-2">
-                  <span className="text-[9px] font-black text-foreground/30 uppercase tracking-widest">AI Confidence</span>
+                  <span className="text-[9px] font-black text-foreground/30 uppercase tracking-widest">System Confidence</span>
                   <span className="text-xs font-mono font-black text-success">98.4%</span>
                 </div>
                 <div className="h-1 bg-white/5 rounded-full overflow-hidden">
@@ -346,7 +346,7 @@ export default function Dashboard() {
             { label: 'Active Assets', value: '4,201' },
             { label: 'Network Latency', value: '0.4ms' },
             { label: 'System Uptime', value: '99.9999%' },
-            { label: 'AI Decisions/hr', value: '12,450' },
+            { label: 'System Decisions/hr', value: '12,450' },
           ].map((stat, i) => (
             <div key={i} className="flex flex-col gap-1">
               <p className="text-[8px] font-black text-foreground/30 uppercase tracking-[0.25em] md:text-[11px] md:text-foreground/40">
