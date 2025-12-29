@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 logger = logging.getLogger("Helixa-Safety")
 
