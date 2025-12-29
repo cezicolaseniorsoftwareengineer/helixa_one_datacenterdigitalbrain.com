@@ -22,6 +22,12 @@ class SafetyController:
     }
 
     @classmethod
+    def get_limits(cls, sensor_type: str, device_type: str = "datacenter") -> dict:
+        """Returns the safety limits for a specific sensor and device type."""
+        base_limits = cls.HARDWARE_LIMITS if device_type in ["notebook", "pc"] else cls.DEFAULT_LIMITS
+        return base_limits.get(sensor_type, {})
+
+    @classmethod
     def validate_sensor_reading(cls, sensor_type: str, value: float, device_type: str = "datacenter") -> bool:
         """Validates if a sensor reading is within safe physical bounds."""
         base_limits = cls.HARDWARE_LIMITS if device_type in ["notebook", "pc"] else cls.DEFAULT_LIMITS

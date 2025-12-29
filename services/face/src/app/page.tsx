@@ -267,6 +267,35 @@ export default function Dashboard() {
                 </div>
               </div>
             </section>
+
+            {/* Predictive Maintenance Card */}
+            <section className="bg-white/[0.03] p-5 rounded-2xl border border-white/5 backdrop-blur-sm flex flex-col gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 bg-accent/10 rounded-lg">
+                  <Cpu className="w-3.5 h-3.5 text-accent" />
+                </div>
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60">Predictive Intelligence</h2>
+              </div>
+              
+              <div className="space-y-3">
+                {latestTelemetry.find(t => t.metadata?.intelligence?.prediction?.status !== 'stable') ? (
+                  <div className="p-3 bg-danger/10 border border-danger/20 rounded-xl animate-pulse">
+                    <p className="text-[10px] font-black text-danger uppercase mb-1">Critical Alert</p>
+                    <p className="text-[11px] text-white/80 font-bold">
+                      {latestTelemetry.find(t => t.metadata?.intelligence?.prediction?.status !== 'stable')?.metadata.intelligence.prediction.recommendation}
+                    </p>
+                    <p className="text-[9px] text-danger/60 mt-1 font-mono">
+                      EST. FAILURE: {latestTelemetry.find(t => t.metadata?.intelligence?.prediction?.status !== 'stable')?.metadata.intelligence.prediction.ttf_minutes} MIN
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-success/5 border border-success/10 rounded-xl">
+                    <p className="text-[10px] font-black text-success uppercase mb-1">System Health</p>
+                    <p className="text-[11px] text-white/60">All parameters within optimal range. No maintenance required.</p>
+                  </div>
+                )}
+              </div>
+            </section>
           </div>
 
           {/* Center Column: 3D Twin */}
@@ -314,11 +343,18 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   latestTelemetry.map((t, i) => (
-                    <div key={i} className="flex gap-2 items-start group">
-                      <span className="text-white/20 shrink-0">[{mounted ? new Date(t.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '--:--:--'}]</span>
-                      <p className={`break-all ${t.value > 30 ? 'text-danger font-bold' : 'text-foreground/70 group-hover:text-foreground transition-colors'}`}>
-                        {t.sensor_id}: {t.value}{t.unit}
-                      </p>
+                    <div key={i} className="flex flex-col gap-1 group border-l border-white/5 pl-3 py-1">
+                      <div className="flex gap-2 items-center">
+                        <span className="text-white/20 shrink-0">[{mounted ? new Date(t.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '--:--:--'}]</span>
+                        <p className={`break-all ${t.metadata?.intelligence?.is_anomaly ? 'text-danger font-bold' : 'text-foreground/70 group-hover:text-foreground transition-colors'}`}>
+                          {t.sensor_id}: {t.value}{t.unit}
+                        </p>
+                      </div>
+                      {t.metadata?.intelligence?.prediction?.status !== 'stable' && (
+                        <p className="text-[8px] text-accent/60 font-bold uppercase tracking-tighter">
+                          &gt; PREDICTION: {t.metadata.intelligence.prediction.status.replace('_', ' ')} ({t.metadata.intelligence.prediction.ttf_minutes}m)
+                        </p>
+                      )}
                     </div>
                   ))
                 )}

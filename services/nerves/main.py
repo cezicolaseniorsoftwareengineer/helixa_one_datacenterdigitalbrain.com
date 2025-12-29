@@ -29,13 +29,10 @@ def handle_shutdown(signum, frame):
 
 def get_hardware_metrics():
     """Captures real hardware metrics from the host machine."""
-    cpu_usage = psutil.cpu_percent(interval=1)
+    cpu_usage = psutil.cpu_percent(interval=0.5)
     ram_usage = psutil.virtual_memory().percent
     
-    # Note: Temperature access via psutil is platform-dependent.
-    # On Windows, it often requires administrative privileges or specific drivers.
-    # We will map CPU usage to 'Load' and RAM to 'Thermal' for simulation purposes if sensors are unavailable.
-    return [
+    metrics = [
         {
             "id": "HOST-CPU-LOAD",
             "type": "power",
@@ -49,55 +46,65 @@ def get_hardware_metrics():
             "unit": "%"
         }
     ]
-
-def detect_device_type():
-    """Detects if the current machine is a Notebook, PC, or Server with high sensitivity."""
-    # 1. Check for battery (Primary Notebook indicator)
-    has_battery = psutil.sensors_battery() is not None
     
-    # 2. Check Chassis Type via WMIC (Windows specific, very reliable)
-    is_laptop_chassis = False
-    if os.name == 'nt':
-        try:
-            # ChassisTypes 8, 9, 10, 11, 12, 14 are all laptop/portable forms
-            output = subprocess.check_output('wmic chassis get chassistypes', shell=True).decode()
-            # Look for any of the laptop codes in the output
-            for code in ['8', '9', '10', '11', '12', '14']:
-                if code in output:
-                    is_laptop_chassis = True
-                    break
-        except:
-            pass
-
-    # 3. Check CPU/RAM (Server/DataCenter indicator)
-    cpu_count = psutil.cpu_count(logical=True)
-    total_ram_gb = psutil.virtual_memory().total / (1024**3)
-    
-    if has_battery or is_laptop_chassis:
-        logger.info(f"Device detected as NOTEBOOK (Battery: {has_battery}, Chassis: {is_laptop_chassis})")
-        return "notebook"
-    elif cpu_count > 32 or total_ram_gb > 64:
-        logger.info(f"Device detected as DATACENTER (CPUs: {cpu_count}, RAM: {total_ram_gb:.1f}GB)")
-        return "datacenter"
-    else:
-        logger.info("Device detected as PC (Desktop)")
-        return "pc"
+    # Try to get battery if available
+    battery = psutil.sensors_battery()
+    if battery:
+        metrics.append({
+            "id": "HOST-BATTERY",
+            "type": "power",
+            "value": battery.percent,
+            "unit": "%"
+        })
+        
+    return metrics
 
 def generate_telemetry():
     """Simulates or captures data center sensor readings."""
-    sensors = []
     device_type = detect_device_type()
     
     if HARDWARE_MODE:
         sensors = get_hardware_metrics()
-        # Add a simulated chiller flow to keep the dashboard consistent
-        sensors.append({
-            "id": "CHILLER-01-FLOW",
-            "type": "flow",
-            "value": round(random.uniform(100.0, 150.0), 2),
-            "unit": "L/m"
-        })
     else:
+        # Enhanced simulation with trends
+        # We use a global counter to simulate a slow rise in temperature
+        if not hasattr(generate_telemetry, "counter"):
+            generate_telemetry.counter = 0
+        generate_telemetry.counter += 0.1
+        
+        base_temp = 22.0 + (generate_telemetry.counter % 10) # Oscillates between 22 and 32
+        
+        sensors = [
+            {
+                "id": "RACK-A01-TEMP",
+                "type": "temperature",
+                "value": round(base_temp + random.uniform(-0.5, 0.5), 2),
+                "unit": "C"
+            },
+            {
+                "id": "PDU-01-LOAD",
+                "type": "power",
+                "value": round(random.uniform(40.0, 60.0), 2),
+                "unit": "kW"
+            },
+            {
+                "id": "COOLING-UNIT-01",
+                "type": "flow",
+                "value": round(random.uniform(100.0, 120.0), 2),
+                "unit": "L/m"
+            }
+        ]
+
+    return {
+        "timestamp": time.time(),
+        "sensors": sensors,
+        "metadata": {
+            "site": "DC-ALPHA-01",
+            "version": "0.3.0",
+            "mode": "hardware" if HARDWARE_MODE else "simulated",
+            "device_type": device_type
+        }
+    }
         sensors = [
             {
                 "id": "RACK-A01-TEMP",

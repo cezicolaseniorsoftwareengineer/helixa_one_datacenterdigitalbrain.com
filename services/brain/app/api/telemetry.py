@@ -2,13 +2,13 @@ from fastapi import APIRouter, Body, HTTPException
 from app.schemas.telemetry import TelemetryData
 from app.core.safety import SafetyController
 from app.core.database import SupabaseManager
-from app.engine.anomaly import AnomalyEngine
+from app.engine.anomaly import IntelligenceEngine
 from prometheus_client import Counter, Gauge
 import logging
 
 logger = logging.getLogger("Helixa-API")
 router = APIRouter()
-anomaly_engine = AnomalyEngine()
+intelligence_suite = IntelligenceEngine()
 
 # Metrics
 INGESTION_COUNT = Counter('telemetry_ingestion_total', 'Total telemetry packets ingested')
@@ -17,10 +17,10 @@ SENSOR_VALUE = Gauge('sensor_reading', 'Current sensor reading', ['sensor_id', '
 
 @router.post("/telemetry")
 async def receive_telemetry(data: TelemetryData):
-    """Ingests and analyzes telemetry data."""
+    """Ingests and analyzes telemetry data with predictive intelligence."""
     INGESTION_COUNT.inc()
     
-    anomalies_found = 0
+    results = []
     safety_violations = 0
     
     device_type = data.metadata.get("device_type", "datacenter") if data.metadata else "datacenter"
@@ -30,12 +30,15 @@ async def receive_telemetry(data: TelemetryData):
         sensor_type = sensor.type
         
         # 1. Safety Validation (CEZI COLA: Risk)
-        if not SafetyController.validate_sensor_reading(sensor_type, sensor.value, device_type):
+        is_safe = SafetyController.validate_sensor_reading(sensor_type, sensor.value, device_type)
+        if not is_safe:
             safety_violations += 1
             
-        # 2. Anomaly Detection (CEZI COLA: Intelligence)
-        if anomaly_engine.analyze(sensor_id, sensor.value):
-            anomalies_found += 1
+        # 2. Intelligence Analysis (CEZI COLA: Intelligence)
+        limits = SafetyController.get_limits(sensor_type, device_type)
+        analysis = intelligence_suite.analyze(sensor_id, sensor.value, sensor_type, limits)
+        
+        if analysis["is_anomaly"]:
             ANOMALY_COUNT.labels(sensor_id=sensor_id).inc()
             
         # 3. Update Metrics (CEZI COLA: Observability)
@@ -43,19 +46,32 @@ async def receive_telemetry(data: TelemetryData):
 
         # 4. Persist to Memory (CEZI COLA: Persistence)
         try:
+            # Enrich metadata with intelligence results
+            enriched_metadata = {
+                **(data.metadata or {}),
+                "intelligence": analysis,
+                "is_safe": is_safe
+            }
+            
             SupabaseManager.save_telemetry(
                 sensor_id=sensor_id,
                 sensor_type=sensor_type,
                 value=sensor.value,
                 unit=sensor.unit,
-                metadata=data.metadata
+                metadata=enriched_metadata
             )
+            
+            results.append({
+                "sensor_id": sensor_id,
+                "analysis": analysis
+            })
+            
         except Exception as e:
             logger.error(f"Database persistence failed: {str(e)}")
         
     return {
         "status": "processed",
         "sensors_count": len(data.sensors),
-        "anomalies": anomalies_found,
-        "safety_violations": safety_violations
+        "safety_violations": safety_violations,
+        "intelligence_report": results
     }
