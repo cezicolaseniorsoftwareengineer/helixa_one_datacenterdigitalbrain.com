@@ -15,4 +15,8 @@ if __name__ == "__main__":
     janitor_thread.start()
     print("🧹 HELIXA-ONE JANITOR: Maintenance service active.")
     
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True, log_level="info")
+    # In production, host should be 0.0.0.0
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", 8000))
+    
+    uvicorn.run("app.main:app", host=host, port=port, reload=False, log_level="info")

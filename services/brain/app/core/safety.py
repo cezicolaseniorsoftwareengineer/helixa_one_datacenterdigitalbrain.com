@@ -44,6 +44,46 @@ class SafetyController:
         return is_safe
 
     @classmethod
+    def get_mitigation_action(cls, sensor_type: str, value: float, analysis: dict, device_type: str) -> Optional[dict]:
+        """
+        Determines the best autonomous action to mitigate a risk before it becomes critical.
+        (CEZI COLA: Risk & Architecture)
+        """
+        prediction = analysis.get("prediction", {})
+        status = prediction.get("status")
+        
+        if status == "stable" and not analysis.get("is_anomaly"):
+            return None
+
+        # Mitigation Logic based on device and sensor
+        if sensor_type == "temperature":
+            if status == "critical_approaching" or value > cls.get_limits("temperature", device_type).get("max", 100) * 0.9:
+                return {
+                    "action": "INCREASE_COOLING",
+                    "intensity": "HIGH",
+                    "target": "FAN_CONTROLLER",
+                    "reason": "Thermal runaway predicted"
+                }
+            elif status == "maintenance_required":
+                return {
+                    "action": "OPTIMIZE_AIRFLOW",
+                    "intensity": "MEDIUM",
+                    "target": "HVAC_SYSTEM",
+                    "reason": "Rising thermal trend detected"
+                }
+
+        if sensor_type == "power":
+            if status == "critical_approaching":
+                return {
+                    "action": "SHED_LOAD",
+                    "intensity": "CRITICAL",
+                    "target": "NON_ESSENTIAL_RACKS",
+                    "reason": "Power capacity limit imminent"
+                }
+        
+        return None
+
+    @classmethod
     def validate_action(cls, action_type: str, params: dict) -> bool:
         """Validates if a system-proposed action is safe to execute."""
         # Placeholder for future action validation logic

@@ -41,15 +41,19 @@ async def receive_telemetry(data: TelemetryData):
         if analysis["is_anomaly"]:
             ANOMALY_COUNT.labels(sensor_id=sensor_id).inc()
             
-        # 3. Update Metrics (CEZI COLA: Observability)
+        # 3. Mitigation Strategy (CEZI COLA: Risk)
+        recommended_action = SafetyController.get_mitigation_action(sensor_type, sensor.value, analysis, device_type)
+
+        # 4. Update Metrics (CEZI COLA: Observability)
         SENSOR_VALUE.labels(sensor_id=sensor_id, type=sensor_type).set(sensor.value)
 
-        # 4. Persist to Memory (CEZI COLA: Persistence)
+        # 5. Persist to Memory (CEZI COLA: Persistence)
         try:
-            # Enrich metadata with intelligence results
+            # Enrich metadata with intelligence results and actions
             enriched_metadata = {
                 **(data.metadata or {}),
                 "intelligence": analysis,
+                "recommended_action": recommended_action,
                 "is_safe": is_safe
             }
             
@@ -63,7 +67,8 @@ async def receive_telemetry(data: TelemetryData):
             
             results.append({
                 "sensor_id": sensor_id,
-                "analysis": analysis
+                "analysis": analysis,
+                "action": recommended_action
             })
             
         except Exception as e:
