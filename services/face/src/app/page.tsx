@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Activity, Zap, Thermometer, ShieldCheck, Cpu, Menu, X, ChevronRight, Settings, BarChart3 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 
-const DigitalTwin = dynamic(() => import('@/components/DigitalTwin'), { 
+const DigitalTwin = nextDynamic(() => import('@/components/DigitalTwin'), { 
   ssr: false,
   loading: () => (
     <div className="flex flex-col items-center justify-center space-y-4">

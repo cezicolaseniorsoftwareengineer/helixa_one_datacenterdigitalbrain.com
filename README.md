@@ -4,13 +4,13 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 
 ## Production Dashboard Snapshots
 
-| Perspective                       | Preview                                                             |
-| --------------------------------- | ------------------------------------------------------------------- |
-| **Data Center Spatial Awareness** | ![Helixa-One Datacenter Overview](Projeto%20data%20center%201.webp) |
-| **Rack-Level Thermal Insight**    | ![Helixa-One Rack View](Projeto%20data%20center%202.gif)            |
-| **Notebook Digital Twin**         | ![Helixa-One Notebook Mode](Projeto%20data%20center%203.jpg)        |
-| **Control-Center Navigation**     | ![Helixa-One Control Center](Projeto%20data%20center%204.gif)       |
-| **Confidence Dashboard**          | ![Helixa-One Confidence Panel](Projeto%20data%20center%205.png)     |
+| Perspective                       | Preview                                                     |
+| --------------------------------- | ----------------------------------------------------------- |
+| **Data Center Spatial Awareness** | ![Helixa-One Datacenter Overview](datacenter_overview.webp) |
+| **Rack-Level Thermal Insight**    | ![Helixa-One Rack View](rack_thermal_insight.gif)           |
+| **Notebook Digital Twin**         | ![Helixa-One Notebook Mode](notebook_digital_twin.jpg)      |
+| **Control-Center Navigation**     | ![Helixa-One Control Center](control_center_navigation.gif) |
+| **Confidence Dashboard**          | ![Helixa-One Confidence Panel](confidence_dashboard.png)    |
 
 ### Snapshot Details
 
@@ -24,10 +24,10 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 
 | Scene                       | Preview                                                 |
 | --------------------------- | ------------------------------------------------------- |
-| **Datacenter Control Loop** | ![Helixa-One Control Loop](ProjetoHelixaProd1.png)      |
-| **PC Mode Twin**            | ![Helixa-One PC Twin](ProjetoHelixaProd2.png)           |
-| **Notebook Twin**           | ![Helixa-One Notebook Twin](ProjetoHelixaProd3.png)     |
-| **Navigation Drawer**       | ![Helixa-One Navigation Drawer](ProjetoHelixaProd4.png) |
+| **Datacenter Control Loop** | ![Helixa-One Control Loop](datacenter_control_loop.png) |
+| **PC Mode Twin**            | ![Helixa-One PC Twin](pc_mode_twin.png)                 |
+| **Notebook Twin**           | ![Helixa-One Notebook Twin](notebook_twin.png)          |
+| **Navigation Drawer**       | ![Helixa-One Navigation Drawer](navigation_drawer.png)  |
 
 ## Core Capabilities
 
@@ -53,7 +53,7 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 | `services/brain`                       | Intelligence engine, anomaly lab, safety layer            | Python, FastAPI, PyTorch, Scikit-learn           |
 | `services/brain/app/core/database.py`  | Supabase connection pool and query builders               | `asyncpg`, SQLAlchemy-style orchestration        |
 | `services/brain/app/engine/anomaly.py` | Statistical baselines, z-score, and ML ensemble detection | NumPy, PyTorch                                   |
-| `services/face`                        | Operator command interface and dashboards                 | Next.js 14, App Router, Tailwind CSS             |
+| `services/face`                        | Operator command interface and dashboards                 | Next.js 16, App Router, Tailwind CSS             |
 | `services/face/src/lib/supabase.ts`    | Realtime client wiring                                    | Supabase JS SDK                                  |
 | `infrastructure`                       | Docker Compose, database bootstrap, secrets layout        | Docker, Supabase SQL                             |
 
@@ -67,7 +67,7 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 ## Technology Stack
 
 - **Languages**: Python, TypeScript
-- **Frameworks**: FastAPI, Next.js (App Router), Tailwind CSS
+- **Frameworks**: FastAPI, Next.js 16 (App Router), Tailwind CSS
 - **Data & Messaging**: Supabase (PostgreSQL + Realtime), AsyncIO pipelines
 - **ML Tooling**: PyTorch, Scikit-learn, NumPy, Pandas
 - **Telemetry Protocols**: SNMP, MQTT, Modbus, gRPC
