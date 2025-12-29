@@ -31,12 +31,12 @@ Helixa-One operates as a digital brain for mission-critical data centers, combin
 
 ## Core Capabilities
 
-- Digital twin orchestration with 3D visualization and real-time state synchronization
-- Predictive maintenance models powered by PyTorch and Scikit-learn pipelines
-- Thermal load forecasting supported by adaptive sampling of incoming telemetry streams
-- Safety Controller enforcing physical thresholds before any autonomous command is accepted
-- Supabase-backed storage delivering time-series durability and realtime dashboards
-- Observability powered by OpenTelemetry traces, structured logs, and Prometheus-ready metrics
+- **Digital Twin Orchestration**: 3D visualization with real-time state synchronization across devices.
+- **Predictive Intelligence**: Real-time trend analysis using linear regression to calculate Time to Failure (TTF).
+- **Closed-Loop Autonomous Control**: The Brain issues mitigation commands (e.g., `INCREASE_COOLING`, `SHED_LOAD`) back to the Nerves service based on predictive risk.
+- **Safety Controller**: Deterministic gatekeeper enforcing physical thresholds before any autonomous command is accepted.
+- **Supabase-Backed Storage**: Time-series durability and realtime dashboards with row-level security.
+- **Observability**: OpenTelemetry traces, structured logs, and Prometheus-ready metrics for SRE-grade monitoring.
 
 ## System Architecture (CEZI COLA)
 

@@ -138,7 +138,7 @@ def generate_telemetry():
     }
 
 def stream_data():
-    """Streams telemetry to the Brain service."""
+    """Streams telemetry to the Brain service and handles autonomous feedback."""
     logger.info(f"Starting telemetry stream to {BRAIN_API_URL}")
     
     while not shutdown_event.is_set():
@@ -148,7 +148,17 @@ def stream_data():
             # For this phase, we use direct HTTP ingestion.
             response = requests.post(BRAIN_API_URL, json=data, timeout=2)
             if response.status_code == 200:
+                report = response.json()
                 logger.info(f"Telemetry sent successfully: {len(data['sensors'])} sensors reported.")
+                
+                # Handle Autonomous Feedback (Closed-Loop Control)
+                for item in report.get("intelligence_report", []):
+                    action = item.get("action")
+                    if action:
+                        logger.warning(f"AUTONOMOUS ACTION RECEIVED for {item['sensor_id']}: {action['action']} (Intensity: {action['intensity']})")
+                        logger.info(f"REASON: {action['reason']}")
+                        # In a real hardware scenario, we would call a local GPIO/API here
+                        # to actually increase fan speed or shed load.
             else:
                 logger.error(f"Failed to send telemetry. Status: {response.status_code}")
         except Exception as e:

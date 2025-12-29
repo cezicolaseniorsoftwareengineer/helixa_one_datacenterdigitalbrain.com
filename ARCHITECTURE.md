@@ -14,9 +14,10 @@ Helixa-One is an advanced Data Center management and optimization system, focuse
 
 ### 2. Intelligence Engine (The Brain)
 
-- **Technology:** Python (PyTorch / Scikit-learn)
+- **Technology:** Python (PyTorch / Scikit-learn / NumPy)
 - **Function:** Digital Twin modeling, thermal load forecasting, and anomaly detection.
-- **Decision:** Every autonomous action passes through a "Safety Controller" that validates physical limits.
+- **Predictive Maintenance:** Real-time trend analysis calculates TTF (Time to Failure) and suggests maintenance windows.
+- **Decision & Control:** Every autonomous action passes through a "Safety Controller" that validates physical limits. The Brain can issue feedback commands to the Ingestion Layer for closed-loop mitigation.
 
 ### 3. Storage (The Memory)
 

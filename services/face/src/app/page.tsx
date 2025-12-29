@@ -48,10 +48,45 @@ export default function Dashboard() {
   const [mode, setMode] = useState<'pc' | 'notebook' | 'datacenter'>('datacenter');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [detectionLog, setDetectionLog] = useState<string[]>([]);
 
   useEffect(() => {
     setMounted(true);
     setCurrentTime(new Date());
+    
+    // Client-side Device Detection (CEZI COLA: Intelligence)
+    const detectDevice = async () => {
+      setDetectionLog(["[SYSTEM] INITIALIZING HARDWARE SCAN..."]);
+      await new Promise(r => setTimeout(r, 800)); // Visual delay for professional feel
+
+      try {
+        // 1. Check for Battery (Strong Notebook indicator)
+        // @ts-ignore
+        const battery = await navigator.getBattery?.();
+        if (battery) {
+          setMode('notebook');
+          setDetectionLog(prev => [...prev, "[SCAN] BATTERY DETECTED", "[SUCCESS] MODE: NOTEBOOK"]);
+          return;
+        }
+
+        // 2. Check Screen/Hardware (PC vs DataCenter/Server)
+        const cores = navigator.hardwareConcurrency || 4;
+        setDetectionLog(prev => [...prev, `[SCAN] CPU CORES: ${cores}`]);
+        
+        if (cores > 16) {
+          setMode('datacenter');
+          setDetectionLog(prev => [...prev, "[SUCCESS] MODE: DATA CENTER"]);
+        } else {
+          setMode('pc');
+          setDetectionLog(prev => [...prev, "[SUCCESS] MODE: PERSONAL COMPUTER"]);
+        }
+      } catch (e) {
+        setDetectionLog(prev => [...prev, "[ERROR] SCAN FAILED", "[FALLBACK] MODE: DATA CENTER"]);
+      }
+    };
+
+    detectDevice();
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -335,14 +370,20 @@ export default function Dashboard() {
               </div>
               
               <div className="flex-1 font-mono text-[9px] space-y-2.5 overflow-y-auto custom-scrollbar pr-2">
-                {latestTelemetry.length === 0 ? (
-                  <div className="space-y-2 opacity-40">
-                    <p className="text-success/80">&gt;&gt; [OK] Safety Controller: Active</p>
-                    <p className="text-accent/80">&gt;&gt; [INFO] Brain: Initializing...</p>
-                    <p className="text-white/40">&gt;&gt; [DATA] Awaiting stream...</p>
+                {/* Device Detection Logs */}
+                {detectionLog.map((log, i) => (
+                  <p key={`log-${i}`} className="text-accent/60 animate-in fade-in slide-in-from-left-2 duration-500">
+                    &gt;&gt; {log}
+                  </p>
+                ))}
+                
+                {latestTelemetry.length === 0 && detectionLog.length > 0 && (
+                  <div className="pt-2 border-t border-white/5 mt-2 opacity-40">
+                    <p className="text-white/40">&gt;&gt; [DATA] Awaiting telemetry stream...</p>
                   </div>
-                ) : (
-                  latestTelemetry.map((t, i) => (
+                )}
+
+                {latestTelemetry.map((t, i) => (
                     <div key={i} className="flex flex-col gap-1 group border-l border-white/5 pl-3 py-1">
                       <div className="flex gap-2 items-center">
                         <span className="text-white/20 shrink-0">[{mounted ? new Date(t.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '--:--:--'}]</span>

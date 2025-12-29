@@ -126,15 +126,15 @@ function DataCenterScene({ temp, mode }: { temp: number, mode: 'pc' | 'notebook'
       </group>
 
       {/* Central Core (AI Brain) */}
-      <Float speed={3} rotationIntensity={2} floatIntensity={2}>
+      <Float speed={temp > 28 ? 10 : 3} rotationIntensity={temp > 28 ? 5 : 2} floatIntensity={temp > 28 ? 5 : 2}>
         <Sphere args={[0.4, 64, 64]} position={[0, 3, -1]}>
           <MeshDistortMaterial
-            color="#06b6d4"
-            speed={4}
-            distort={0.5}
+            color={temp > 28 ? "#ff003c" : "#06b6d4"}
+            speed={temp > 28 ? 10 : 4}
+            distort={temp > 28 ? 0.8 : 0.5}
             radius={1}
-            emissive="#06b6d4"
-            emissiveIntensity={0.5}
+            emissive={temp > 28 ? "#ff003c" : "#06b6d4"}
+            emissiveIntensity={temp > 28 ? 1 : 0.5}
           />
         </Sphere>
       </Float>
