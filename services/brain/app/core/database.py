@@ -1,8 +1,11 @@
 import os
+import logging
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger("Helixa-Database")
 
 class SupabaseManager:
     """

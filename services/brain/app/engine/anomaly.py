@@ -41,7 +41,7 @@ class IntelligenceEngine:
         
         return {
             "is_anomaly": is_anomaly,
-            "z_score": round(z_score, 2),
+            "z_score": float(round(z_score, 2)),
             "prediction": prediction
         }
 
@@ -57,12 +57,12 @@ class IntelligenceEngine:
             return False, 0.0
             
         z_score = abs((value - mean) / std)
-        is_anomaly = z_score > 3.0
+        is_anomaly = bool(z_score > 3.0)
         
         if is_anomaly:
             logger.warning(f"ANOMALY: {sensor_id} value {value} (Z:{z_score:.2f})")
             
-        return is_anomaly, z_score
+        return is_anomaly, float(z_score)
 
     def _predict_trend(self, sensor_id: str, sensor_type: str, limits: Optional[Dict[str, float]]) -> Dict:
         """
@@ -79,7 +79,10 @@ class IntelligenceEngine:
         # Normalize x to prevent large numbers
         x_norm = x - x[0]
         
-        slope, intercept = np.polyfit(x_norm, y, 1)
+        try:
+            slope, intercept = np.polyfit(x_norm, y, 1)
+        except Exception:
+            return {"status": "stable", "ttf_minutes": None}
         
         # If slope is positive and we have a max limit
         if slope > 0 and "max" in limits:
@@ -92,13 +95,13 @@ class IntelligenceEngine:
                 status = "optimal" if seconds_to_maint > 3600 else "maintenance_required"
                 return {
                     "status": status,
-                    "ttf_minutes": round(seconds_to_maint / 60, 1),
+                    "ttf_minutes": float(round(seconds_to_maint / 60, 1)),
                     "recommendation": "Check cooling systems" if sensor_type == "temperature" else "Balance load"
                 }
             else:
                 return {
                     "status": "critical_approaching",
-                    "ttf_minutes": round((critical_val - y[-1]) / slope / 60, 1),
+                    "ttf_minutes": float(round((critical_val - y[-1]) / slope / 60, 1)),
                     "recommendation": "IMMEDIATE ACTION REQUIRED"
                 }
                 
