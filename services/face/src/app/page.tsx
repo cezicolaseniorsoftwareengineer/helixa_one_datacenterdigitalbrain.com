@@ -38,6 +38,8 @@ const NIcon = ({ onClick, isOpen }: { onClick: () => void, isOpen: boolean }) =>
   </button>
 );
 
+export const dynamic = 'force-dynamic';
+
 export default function Dashboard() {
   const [latestTelemetry, setLatestTelemetry] = useState<any[]>([]);
   const [pue, setPue] = useState(1.12);
