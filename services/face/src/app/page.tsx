@@ -16,24 +16,83 @@ const DigitalTwin = nextDynamic(() => import('@/components/DigitalTwin'), {
   )
 });
 
+const HelixaLogo = ({ className = "w-8 h-8", variant = "standard" }: { className?: string, variant?: "standard" | "cosmic" }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {variant === "standard" ? (
+      <>
+        {/* Infinity Path - The Living Circuit */}
+        <path 
+          d="M9 11C5 11 2 13.5 2 16C2 18.5 5 21 9 21C11 21 13 20 15 18L17 14C19 12 21 11 23 11C27 11 30 13.5 30 16C30 18.5 27 21 23 21" 
+          stroke="currentColor" 
+          strokeWidth="1.5" 
+          strokeLinecap="round" 
+          className="text-accent/20"
+        />
+        {/* Data Flow Animation */}
+        <path 
+          d="M9 11C5 11 2 13.5 2 16C2 18.5 5 21 9 21C11 21 13 20 15 18L17 14C19 12 21 11 23 11C27 11 30 13.5 30 16C30 18.5 27 21 23 21" 
+          stroke="currentColor" 
+          strokeWidth="1.5" 
+          strokeLinecap="round" 
+          strokeDasharray="4 12"
+          className="text-accent animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+        />
+        {/* Data Center Rack Nodes */}
+        <g className="text-accent">
+          <rect x="4" y="14.5" width="1.5" height="3" rx="0.5" fill="currentColor" className="opacity-40" />
+          <rect x="7" y="14.5" width="1.5" height="3" rx="0.5" fill="currentColor" className="animate-pulse" />
+          <rect x="23.5" y="14.5" width="1.5" height="3" rx="0.5" fill="currentColor" className="animate-pulse" />
+          <rect x="26.5" y="14.5" width="1.5" height="3" rx="0.5" fill="currentColor" className="opacity-40" />
+        </g>
+      </>
+    ) : (
+      <>
+        {/* Cosmic Dust Infinity - Particle Based */}
+        <g className="text-accent">
+          {[...Array(12)].map((_, i) => {
+            const angle = (i / 12) * Math.PI * 2;
+            const x = 16 + Math.cos(angle) * 8;
+            const y = 16 + Math.sin(angle * 2) * 4; // Figure-8 pattern
+            return (
+              <circle 
+                key={i} 
+                cx={x} 
+                cy={y} 
+                r={Math.random() * 0.8 + 0.2} 
+                fill="currentColor" 
+                className={`animate-pulse`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              />
+            );
+          })}
+          {/* Extra "Dust" particles */}
+          {[...Array(15)].map((_, i) => (
+            <circle 
+              key={`dust-${i}`} 
+              cx={10 + Math.random() * 12} 
+              cy={12 + Math.random() * 8} 
+              r="0.2" 
+              fill="currentColor" 
+              className="opacity-30 animate-ping"
+              style={{ animationDelay: `${Math.random() * 2}s` }}
+            />
+          ))}
+        </g>
+      </>
+    )}
+    {/* Central Intelligence Core */}
+    <circle cx="16" cy="16" r="1.5" fill="currentColor" className="text-accent shadow-[0_0_10px_rgba(0,242,255,1)]" />
+    <circle cx="16" cy="16" r="3.5" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" className="text-accent/40 animate-[spin_8s_linear_infinite]" />
+  </svg>
+);
+
 const NIcon = ({ onClick, isOpen }: { onClick: () => void, isOpen: boolean }) => (
   <button 
     onClick={onClick}
     className="relative group flex items-center justify-center w-12 h-12 rounded-full bg-black border border-white/20 hover:border-accent/50 transition-all duration-300 shadow-[0_0_18px_rgba(0,0,0,0.5)] active:scale-95 z-50"
   >
     <div className={`absolute inset-0 rounded-full bg-accent/5 group-hover:bg-accent/10 transition-colors ${isOpen ? 'bg-accent/20' : ''}`} />
-    <div className="relative w-8 h-8 rounded-full overflow-hidden">
-      <Image
-        src="/img.helixa_one.png"
-        alt="Helixa One logo"
-        width={720}
-        height={720}
-        className="absolute inset-0 m-auto object-contain"
-        style={{ width: '400%', height: '400%' }}
-        aria-hidden={false}
-        priority
-      />
-    </div>
+    <HelixaLogo className="w-7 h-7 relative z-10" variant="cosmic" />
     {isOpen && <div className="absolute -right-1 -top-1 w-3 h-3 bg-accent rounded-full border-2 border-black animate-pulse" />}
   </button>
 );
@@ -207,11 +266,14 @@ export default function Dashboard() {
         <div className="flex items-center gap-5">
           <NIcon onClick={() => setIsMenuOpen(!isMenuOpen)} isOpen={isMenuOpen} />
           <div className="h-8 w-[1px] bg-white/10 hidden sm:block" />
-          <div>
-            <h1 className="text-lg md:text-xl font-black tracking-[-0.05em] text-white flex items-center gap-2">
-              HELIXA<span className="text-accent">ONE</span>
-            </h1>
-            <p className="text-[8px] md:text-[9px] text-foreground/30 font-black uppercase tracking-[0.3em] hidden xs:block">Intelligence Interface</p>
+          <div className="flex items-center gap-3">
+            <HelixaLogo className="w-6 h-6 text-accent" />
+            <div>
+              <h1 className="text-lg md:text-xl font-black tracking-[-0.05em] text-white flex items-center gap-2">
+                HELIXA<span className="text-accent">ONE</span>
+              </h1>
+              <p className="text-[8px] md:text-[9px] text-foreground/30 font-black uppercase tracking-[0.3em] hidden xs:block">Intelligence Interface</p>
+            </div>
           </div>
         </div>
         
@@ -398,7 +460,7 @@ export default function Dashboard() {
                       )}
                     </div>
                   ))
-                )}
+                }
                 <div className="text-accent animate-pulse">_</div>
               </div>
 

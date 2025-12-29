@@ -93,6 +93,47 @@ function DesktopPC({ position, color, label }: { position: [number, number, numb
   );
 }
 
+function NeuralNetwork({ temp }: { temp: number }) {
+  const points = useMemo(() => {
+    const p = new Float32Array(200 * 3);
+    for (let i = 0; i < 200; i++) {
+      const r = 1.2 + Math.random() * 0.8;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      p[i * 3 + 2] = r * Math.cos(phi);
+    }
+    return p;
+  }, []);
+
+  const ref = useRef<THREE.Points>(null);
+  useFrame((state) => {
+    if (ref.current) {
+      ref.current.rotation.y += 0.002 * (temp > 28 ? 5 : 1);
+      ref.current.rotation.x += 0.001 * (temp > 28 ? 5 : 1);
+    }
+  });
+
+  return (
+    <points ref={ref} position={[0, 3, -1]}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[points, 3]}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.05}
+        color={temp > 28 ? "#ff003c" : "#06b6d4"}
+        transparent
+        opacity={0.6}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
 function DataCenterScene({ temp, mode }: { temp: number, mode: 'pc' | 'notebook' | 'datacenter' }) {
   const statusColor = useMemo(() => {
     if (temp > 30) return '#ef4444';
@@ -138,6 +179,8 @@ function DataCenterScene({ temp, mode }: { temp: number, mode: 'pc' | 'notebook'
           />
         </Sphere>
       </Float>
+
+      <NeuralNetwork temp={temp} />
 
       {/* Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
