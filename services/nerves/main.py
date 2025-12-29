@@ -59,6 +59,25 @@ def get_hardware_metrics():
         
     return metrics
 
+def detect_device_type():
+    """Detects if the current machine is a Notebook, PC, or Data Center node."""
+    try:
+        # Check for battery (Notebook indicator)
+        battery = psutil.sensors_battery()
+        has_battery = battery is not None
+        
+        # Check CPU core count (Server indicator)
+        cpu_count = psutil.cpu_count(logical=True)
+        
+        if has_battery:
+            return "Notebook"
+        elif cpu_count > 16:
+            return "Data Center Node"
+        else:
+            return "Professional PC"
+    except Exception:
+        return "Unknown Node"
+
 def generate_telemetry():
     """Simulates or captures data center sensor readings."""
     device_type = detect_device_type()
@@ -105,37 +124,6 @@ def generate_telemetry():
             "device_type": device_type
         }
     }
-        sensors = [
-            {
-                "id": "RACK-A01-TEMP",
-                "type": "temperature",
-                "value": round(random.uniform(20.0, 26.0), 2),
-                "unit": "C"
-            },
-            {
-                "id": "PDU-01-LOAD",
-                "type": "power",
-                "value": round(random.uniform(5.0, 12.0), 2),
-                "unit": "kW"
-            },
-            {
-                "id": "CHILLER-01-FLOW",
-                "type": "flow",
-                "value": round(random.uniform(100.0, 150.0), 2),
-                "unit": "L/m"
-            }
-        ]
-
-    return {
-        "timestamp": time.time(),
-        "sensors": sensors,
-        "metadata": {
-            "site": "DC-ALPHA-01",
-            "version": "0.2.0",
-            "mode": "hardware" if HARDWARE_MODE else "simulated",
-            "device_type": device_type
-        }
-    }
 
 def stream_data():
     """Streams telemetry to the Brain service and handles autonomous feedback."""
@@ -146,7 +134,7 @@ def stream_data():
         try:
             # In a real scenario, we would use a message broker like Kafka.
             # For this phase, we use direct HTTP ingestion.
-            response = requests.post(BRAIN_API_URL, json=data, timeout=2)
+            response = requests.post(BRAIN_API_URL, json=data, timeout=5)
             if response.status_code == 200:
                 report = response.json()
                 logger.info(f"Telemetry sent successfully: {len(data['sensors'])} sensors reported.")
