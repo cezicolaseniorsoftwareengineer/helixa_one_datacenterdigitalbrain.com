@@ -1,5 +1,11 @@
 # Helixa-One: Data Center Digital Brain
 
+<img width="1909" height="899" alt="image" src="https://github.com/user-attachments/assets/344b557b-5ade-4ae6-8cb8-f66c8d5b30d8" />
+
+<img width="1912" height="852" alt="image" src="https://github.com/user-attachments/assets/bd2065e8-22b6-4b8e-abfd-772d8e464a0e" />
+
+
+
 Helixa-One operates as a digital brain for mission-critical data centers, combining telemetry ingestion through SNMP, MQTT, Modbus, and gRPC with advanced analytics and responsive visualization. Continuous predictions, anomaly triage, and safety enforcement maintain optimal power usage effectiveness (PUE) while protecting infrastructure limits.
 
 ## Production Dashboard Snapshots
